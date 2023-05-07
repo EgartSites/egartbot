@@ -424,10 +424,10 @@ namespace egartbot.CoreModules
 
                             modules.Sort((string a, string b) => {
                                 if (a.Contains("✅"))
-                                    return 1;
+                                    return -1;
 
                                 if (b.Contains("✅"))
-                                    return -1;
+                                    return 1;
 
                                 return 0;
                             });
