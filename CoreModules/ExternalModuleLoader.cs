@@ -434,9 +434,31 @@ namespace egartbot.CoreModules
 
                             resultMessage = "Available modules (✅ -  loaded):";
 
+                            var textEntities = new List<TdApi.TextEntity>()
+                            {
+                                
+                                new TdApi.TextEntity
+                                {
+                                    Length = resultMessage.Length,
+                                    Type = new TdApi.TextEntityType.TextEntityTypeBold()
+                                }
+                                
+                            };
+
                             foreach (var m in modules)
                             {
-                                resultMessage += Environment.NewLine + m;
+                                resultMessage += Environment.NewLine;
+
+                                int offset = (m.Contains("✅") ? 2 : 0);
+                                
+                                textEntities.Add(new TdApi.TextEntity
+                                {
+                                    Offset = resultMessage.Length + offset,
+                                    Length = m.Length,
+                                    Type = new TdApi.TextEntityType.TextEntityTypeCode()
+                                });
+
+                                resultMessage += m;
                             }
 
                             await _client.ExecuteAsync(new TdApi.EditMessageText
@@ -448,14 +470,7 @@ namespace egartbot.CoreModules
                                     Text = new TdApi.FormattedText
                                     {
                                         Text = resultMessage,
-                                        Entities = new TdApi.TextEntity[]
-                                        {
-                                            new TdApi.TextEntity
-                                            {
-                                                Length = resultMessage.Length,
-                                                Type = new TdApi.TextEntityType.TextEntityTypeBold { }
-                                            }
-                                        }
+                                        Entities = textEntities.ToArray()
                                     }
                                 }
                             });
@@ -502,7 +517,7 @@ namespace egartbot.CoreModules
                                             new TdApi.TextEntity
                                             {
                                                 Length = resultMessage.Length,
-                                                Type = new TdApi.TextEntityType.TextEntityTypeBold { }
+                                                Type = new TdApi.TextEntityType.TextEntityTypeBold()
                                             }
                                         }
                                     }
